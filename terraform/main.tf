@@ -3,12 +3,12 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "reactapp-rg"
+  name     = "reactAppRG"
   location = "East US"
 }
 
 resource "azurerm_app_service_plan" "asp" {
-  name                = "reactapp-plan"
+  name                = "reactAppPlan"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku {
@@ -18,7 +18,7 @@ resource "azurerm_app_service_plan" "asp" {
 }
 
 resource "azurerm_app_service" "app" {
-  name                = "reactjenkinsapp"
+  name                = "reactAppService123"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_app_service_plan.asp.id
