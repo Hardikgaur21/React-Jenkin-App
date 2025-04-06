@@ -13,18 +13,16 @@ resource "azurerm_service_plan" "this" {
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   os_type             = "Linux"
-
-  sku_name = "B1"
+  sku_name            = "B1"
 }
 
 resource "azurerm_linux_web_app" "this" {
   name                = "webapijenkinshardik827813"
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
-  service_plan_id     = azurerm_service_plan.this.id  # Updated attribute
+  service_plan_id     = azurerm_service_plan.this.id
 
-  site_config {
-    always_on = true
-    linux_fx_version = "DOTNETCORE|8.0"
+  identity {
+    type = "SystemAssigned"
   }
 }
