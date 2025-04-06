@@ -13,7 +13,7 @@ resource "azurerm_service_plan" "this" {
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
   os_type             = "Linux"
-  sku_name            = "B1"
+  sku_name            = var.app_service_plan_sku
 }
 
 resource "azurerm_linux_web_app" "this" {
@@ -24,7 +24,7 @@ resource "azurerm_linux_web_app" "this" {
 
   site_config {
     application_stack {
-      node_version = "18-lts" # Use the Node.js version compatible with your React app
+      node_version = "18-lts"
     }
   }
 
