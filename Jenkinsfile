@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('Build React App') {
+        stage('Build') {
             steps {
                 dir('my-react-app') {
                     bat 'npm install'
@@ -39,23 +39,17 @@ pipeline {
             }
         }
 
-        stage('Zip Build Folder') {
+                stage('Deploy') {
             steps {
-                dir('my-react-app') {
-                    // Create the zip from the build directory
-                    bat 'powershell Compress-Archive -Path build/* -DestinationPath ../build.zip -Force'
+                withCredentials([azureServicePrincipal(credentialsId: AZURE_CREDENTIALS_ID)]) {
+                    bat "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
+                    bat "powershell Compress-Archive -Path ./publish/* -DestinationPath ./publish.zip -Force"
+                    bat "az webapp deploy --resource-group $RESOURCE_GROUP --name $APP_SERVICE_NAME --src-path ./publish.zip --type zip"
                 }
             }
         }
 
-        stage('Deploy to Azure') {
-            steps {
-                withCredentials([azureServicePrincipal(credentialsId: AZURE_CREDENTIALS_ID)]) {
-                    bat "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID"
-                    bat "az webapp deploy --resource-group %RESOURCE_GROUP% --name %APP_SERVICE_NAME% --src-path build.zip --type zip"
-                }
-            }
-        }
+
     }
 
     post {
